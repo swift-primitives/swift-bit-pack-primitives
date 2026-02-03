@@ -28,8 +28,7 @@ struct BitPackingTests {
 extension BitPackingTests.Unit {
     @Test
     func `packing for 0 bits`() {
-        let count: Bit.Index.Count = 0
-        let packing = Bit.Packing<UInt64>(count: count, bitsPerWord: .bitWidth)
+        let packing = Bit.Packing<UInt64>(count: 0, bitsPerWord: .bitWidth)
 
         #expect(packing.wordCount == 0)
         #expect(packing.unusedBits == 0)
@@ -37,8 +36,7 @@ extension BitPackingTests.Unit {
 
     @Test
     func `packing for exactly 64 bits`() {
-        let count: Bit.Index.Count = 64
-        let packing = Bit.Packing<UInt64>(count: count, bitsPerWord: .bitWidth)
+        let packing = Bit.Packing<UInt64>(count: 64, bitsPerWord: .bitWidth)
 
         #expect(packing.wordCount == 1)
         #expect(packing.unusedBits == 0)
@@ -46,8 +44,7 @@ extension BitPackingTests.Unit {
 
     @Test
     func `packing for 65 bits`() {
-        let count: Bit.Index.Count = 65
-        let packing = Bit.Packing<UInt64>(count: count, bitsPerWord: .bitWidth)
+        let packing = Bit.Packing<UInt64>(count: 65, bitsPerWord: .bitWidth)
 
         #expect(packing.wordCount == 2)
         #expect(packing.unusedBits == 63)
@@ -55,8 +52,7 @@ extension BitPackingTests.Unit {
 
     @Test
     func `packing for 100 bits`() {
-        let count: Bit.Index.Count = 100
-        let packing = Bit.Packing<UInt64>(count: count, bitsPerWord: .bitWidth)
+        let packing = Bit.Packing<UInt64>(count: 100, bitsPerWord: .bitWidth)
 
         // 100 bits needs 2 words (128 bits capacity), with 28 unused
         #expect(packing.wordCount == 2)
@@ -65,8 +61,7 @@ extension BitPackingTests.Unit {
 
     @Test
     func `packing for UInt8 words`() {
-        let count: Bit.Index.Count = 10
-        let packing = Bit.Packing<UInt8>(count: count, bitsPerWord: .bitWidth)
+        let packing = Bit.Packing<UInt8>(count: 10, bitsPerWord: .bitWidth)
 
         // 10 bits needs 2 bytes (16 bits capacity), with 6 unused
         #expect(packing.wordCount == 2)
@@ -75,8 +70,7 @@ extension BitPackingTests.Unit {
 
     @Test
     func `capacity-based init`() {
-        let capacity: Bit.Index.Count = 100
-        let packing = Bit.Packing<UInt64>(capacity: capacity, bitsPerWord: .bitWidth)
+        let packing = Bit.Packing<UInt64>(count: 100, bitsPerWord: .bitWidth)
 
         #expect(packing.wordCount == 2)
         #expect(packing.unusedBits == 28)
@@ -88,8 +82,7 @@ extension BitPackingTests.Unit {
 extension BitPackingTests.EdgeCase {
     @Test
     func `packing for 1 bit`() {
-        let count: Bit.Index.Count = 1
-        let packing = Bit.Packing<UInt64>(count: count, bitsPerWord: .bitWidth)
+        let packing = Bit.Packing<UInt64>(count: 1, bitsPerWord: .bitWidth)
 
         #expect(packing.wordCount == 1)
         #expect(packing.unusedBits == 63)
@@ -97,8 +90,7 @@ extension BitPackingTests.EdgeCase {
 
     @Test
     func `packing at exact word boundary`() {
-        let count: Bit.Index.Count = 128
-        let packing = Bit.Packing<UInt64>(count: count, bitsPerWord: .bitWidth)
+        let packing = Bit.Packing<UInt64>(count: 128, bitsPerWord: .bitWidth)
 
         #expect(packing.wordCount == 2)
         #expect(packing.unusedBits == 0)

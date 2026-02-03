@@ -45,18 +45,5 @@ extension Bit {
             self.wordCount = Index_Primitives.Index<Word>.Count(Cardinal(UInt(q + r.signum())))
             self.unusedBits = Bit.Index.Count(Cardinal(UInt((bitsPerWord.factor - r) % bitsPerWord.factor)))
         }
-
-        /// Creates packing requirements from a capacity.
-        ///
-        /// - Parameters:
-        ///   - capacity: The bit capacity.
-        ///   - bitsPerWord: The ratio of bits per word for the storage type.
-        @inlinable
-        public init(
-            capacity: Bit.Index.Count,
-            bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
-        ) {
-            self.init(count: capacity, bitsPerWord: bitsPerWord)
-        }
     }
 }
