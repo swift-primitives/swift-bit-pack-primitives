@@ -73,14 +73,10 @@ extension Bit.Packing {
             index: Bit.Index,
             bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
         ) {
-            let i = Int(bitPattern: index.position)
-            let factor = bitsPerWord.factor
-
-            self.word = Index<Word>(__unchecked: (), Ordinal(UInt(i / factor)))
-
-            let bitOffset = i % factor
-            self.bit = Index<Bit>.Offset(Affine.Discrete.Vector(bitOffset))
-            self.mask = Word(1) << bitOffset
+            let (q, r) = Int(bitPattern: index).quotientAndRemainder(dividingBy: bitsPerWord.factor)
+            self.word = Index<Word>(Ordinal(UInt(q)))
+            self.bit = Index<Bit>.Offset(Affine.Discrete.Vector(r))
+            self.mask = Word(1) << r
         }
 
         /// Creates a location from a typed bit count.
@@ -96,14 +92,7 @@ extension Bit.Packing {
             count: Bit.Index.Count,
             bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
         ) {
-            let i = Int(bitPattern: count.count)
-            let factor = bitsPerWord.factor
-
-            self.word = Index<Word>(__unchecked: (), Ordinal(UInt(i / factor)))
-
-            let bitOffset = i % factor
-            self.bit = Index<Bit>.Offset(Affine.Discrete.Vector(bitOffset))
-            self.mask = Word(1) << bitOffset
+            self.init(index: Bit.Index(count), bitsPerWord: bitsPerWord)
         }
     }
 }

@@ -41,13 +41,9 @@ extension Bit {
             count: Bit.Index.Count,
             bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
         ) {
-            let c = Int(bitPattern: count.count)
-            let factor = bitsPerWord.factor
-            let words = (c + factor - 1) / factor
-            let unused = words * factor - c
-
-            self.wordCount = Index_Primitives.Index<Word>.Count(Cardinal(UInt(words)))
-            self.unusedBits = Index_Primitives.Index<Bit>.Count(Cardinal(UInt(unused)))
+            let (q, r) = Int(bitPattern: count).quotientAndRemainder(dividingBy: bitsPerWord.factor)
+            self.wordCount = Index_Primitives.Index<Word>.Count(Cardinal(UInt(q + r.signum())))
+            self.unusedBits = Bit.Index.Count(Cardinal(UInt((bitsPerWord.factor - r) % bitsPerWord.factor)))
         }
 
         /// Creates packing requirements from a capacity.
@@ -60,13 +56,7 @@ extension Bit {
             capacity: Bit.Index.Count,
             bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
         ) {
-            let c = Int(bitPattern: capacity.count)
-            let factor = bitsPerWord.factor
-            let words = (c + factor - 1) / factor
-            let unused = words * factor - c
-
-            self.wordCount = Index_Primitives.Index<Word>.Count(Cardinal(UInt(words)))
-            self.unusedBits = Bit.Index.Count(Cardinal(UInt(unused)))
+            self.init(count: capacity, bitsPerWord: bitsPerWord)
         }
     }
 }
