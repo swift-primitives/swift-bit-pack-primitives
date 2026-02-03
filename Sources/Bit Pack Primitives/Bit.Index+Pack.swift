@@ -21,8 +21,8 @@ extension Bit.Index {
     @inlinable
     public func location<Word: FixedWidthInteger & UnsignedInteger & Sendable>(
         bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
-    ) -> Bit.Packing<Word>.Location {
-        Bit.Packing<Word>.Location(
+    ) -> Bit.Pack<Word>.Location {
+        Bit.Pack<Word>.Location(
             index: self,
             bitsPerWord: bitsPerWord
         )

@@ -12,7 +12,7 @@
 public import Affine_Primitives
 public import Index_Primitives
 
-extension Bit.Packing {
+extension Bit.Pack {
     /// A bit's location within word-based storage.
     ///
     /// When bits are packed into fixed-width integer words, `Location` provides
@@ -27,7 +27,7 @@ extension Bit.Packing {
     ///
     /// ```swift
     /// let index: Bit.Index = 42
-    /// let loc = Bit.Packing<UInt>.Location(index: index, bitsPerWord: .bitsPerWord)
+    /// let loc = Bit.Pack<UInt>.Location(index: index, bitsPerWord: .bitsPerWord)
     /// let bit = (words[loc.word] & loc.mask) != 0
     /// ```
     public struct Location: Sendable {
