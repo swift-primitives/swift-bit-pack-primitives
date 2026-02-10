@@ -60,7 +60,7 @@ extension Bit.Pack {
         ) {
             self.word = word
             self.bit = bit
-            self.mask = Word(1) << bit.rawValue.rawValue
+            self.mask = Word(1) << Int(bitPattern: bit)
         }
 
         /// Creates a location from a typed bit index.
@@ -73,10 +73,10 @@ extension Bit.Pack {
             index: Bit.Index,
             bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
         ) {
-            let (q, r) = Int(bitPattern: index).quotientAndRemainder(dividingBy: bitsPerWord.factor)
-            self.word = Index<Word>(Ordinal(UInt(q)))
-            self.bit = Index<Bit>.Offset(Affine.Discrete.Vector(r))
-            self.mask = Word(1) << r
+            let (wordIndex, bitOffset) = bitsPerWord.quotientAndRemainder(dividing: index)
+            self.word = wordIndex
+            self.bit = bitOffset
+            self.mask = Word(1) << Int(bitPattern: bitOffset)
         }
 
         /// Creates a location from a typed bit count.
@@ -92,7 +92,10 @@ extension Bit.Pack {
             count: Bit.Index.Count,
             bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
         ) {
-            self.init(index: Bit.Index(count), bitsPerWord: bitsPerWord)
+            self.init(
+                index: count.map(Ordinal.init),
+                bitsPerWord: bitsPerWord
+            )
         }
     }
 }

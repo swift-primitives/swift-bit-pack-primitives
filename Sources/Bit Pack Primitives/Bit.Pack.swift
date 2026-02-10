@@ -42,9 +42,14 @@ extension Bit {
             count: Bit.Index.Count,
             bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
         ) {
-            let (q, r) = Int(bitPattern: count).quotientAndRemainder(dividingBy: bitsPerWord.factor)
-            self.words = Words(count: Index_Primitives.Index<Word>.Count(Cardinal(UInt(q + r.signum()))))
-            self.bits = Bits(unused: Bit.Index.Count(Cardinal(UInt((bitsPerWord.factor - r) % bitsPerWord.factor))))
+            let (wordCount, remainingBits) = bitsPerWord.quotientAndRemainder(dividing: count)
+            let hasPartialWord = remainingBits > .zero
+            self.words = Words(count: hasPartialWord ? wordCount + .one : wordCount)
+            let bitsPerWordCount = Bit.Index.Count(Cardinal(UInt(bitsPerWord.factor)))
+            self.bits = Bits(unused: hasPartialWord
+                ? bitsPerWordCount.subtract.saturating(remainingBits)
+                : .zero
+            )
         }
     }
 }
