@@ -45,7 +45,7 @@ extension Bit {
             let (wordCount, remainingBits) = bitsPerWord.quotientAndRemainder(dividing: count)
             let hasPartialWord = remainingBits > .zero
             self.words = Words(count: hasPartialWord ? wordCount + .one : wordCount)
-            let bitsPerWordCount = Bit.Index.Count(Cardinal(UInt(bitsPerWord.factor)))
+            let bitsPerWordCount = Index_Primitives.Index<Word>.Count.one * bitsPerWord
             self.bits = Bits(unused: hasPartialWord
                 ? bitsPerWordCount.subtract.saturating(remainingBits)
                 : .zero
