@@ -53,3 +53,14 @@ extension Bit {
         }
     }
 }
+
+extension Bit.Pack {
+    /// The number of bits per word as a typed bit count.
+    ///
+    /// Derived from the `Ratio<Word, Bit>.bitWidth` morphism applied to
+    /// one word, centralizing the domain bound as a typed constant.
+    @inlinable
+    public static var bitWidth: Bit.Index.Count {
+        Index_Primitives.Index<Word>.Count.one * Affine.Discrete.Ratio<Word, Bit>.bitWidth
+    }
+}

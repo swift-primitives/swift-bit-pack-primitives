@@ -60,7 +60,7 @@ extension Bit.Pack {
         ) {
             self.word = word
             self.bit = bit
-            self.mask = Word(1) << Int(bitPattern: bit)
+            self.mask = Word(1) << bit.magnitude
         }
 
         /// Creates a location from a typed bit index.
@@ -76,7 +76,7 @@ extension Bit.Pack {
             let (wordIndex, bitOffset) = bitsPerWord.quotientAndRemainder(dividing: index)
             self.word = wordIndex
             self.bit = bitOffset
-            self.mask = Word(1) << Int(bitPattern: bitOffset)
+            self.mask = Word(1) << bitOffset.magnitude
         }
 
         /// Creates a location from a typed bit count.
