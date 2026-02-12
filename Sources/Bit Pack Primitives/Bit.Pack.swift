@@ -61,6 +61,6 @@ extension Bit.Pack {
     /// one word, centralizing the domain bound as a typed constant.
     @inlinable
     public static var bitWidth: Bit.Index.Count {
-        Index_Primitives.Index<Word>.Count.one * Affine.Discrete.Ratio<Word, Bit>.bitWidth
+        Index_Primitives.Index<Word>.Count.one * .bitWidth
     }
 }
