@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Index_Primitives
+public import Affine_Primitives
 
 extension Bit {
     /// A packing layout witness for bit storage in fixed-width integer words.
