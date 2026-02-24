@@ -97,5 +97,18 @@ extension Bit.Pack {
                 bitsPerWord: bitsPerWord
             )
         }
+
+        /// Recomposes the global bit index from word index and bit offset.
+        ///
+        /// Inverse of `init(index:bitsPerWord:)`:
+        /// `Location(index: i, bitsPerWord: r).index(bitsPerWord: r) == i`.
+        ///
+        /// - Parameter bitsPerWord: The ratio of bits per word for the storage type.
+        @inlinable
+        public func index(
+            bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
+        ) -> Bit.Index {
+            (word.map(Cardinal.init) * bitsPerWord).map(Ordinal.init) + bit.magnitude
+        }
     }
 }
