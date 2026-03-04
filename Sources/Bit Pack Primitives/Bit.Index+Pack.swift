@@ -19,7 +19,7 @@ extension Bit.Index {
     /// - Parameter bitsPerWord: The ratio of bits per word for the storage type.
     /// - Returns: The word index, bit offset, and mask for this bit position.
     @inlinable
-    public func location<Word: FixedWidthInteger & UnsignedInteger & Sendable>(
+    public func location<Word: FixedWidthInteger & UnsignedInteger>(
         bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
     ) -> Bit.Pack<Word>.Location {
         Bit.Pack<Word>.Location(
