@@ -12,7 +12,7 @@
 public import Affine_Primitives
 public import Index_Primitives
 
-extension Bit.Packing {
+extension Bit.Pack {
     /// A bit's location within word-based storage.
     ///
     /// When bits are packed into fixed-width integer words, `Location` provides
@@ -27,14 +27,16 @@ extension Bit.Packing {
     ///
     /// ```swift
     /// let index: Bit.Index = 42
-    /// let loc = Bit.Packing<UInt>.Location(index: index, bitsPerWord: .bitsPerWord)
+    /// let loc = Bit.Pack<UInt>.Location(index: index, bitsPerWord: .bitsPerWord)
     /// let bit = (words[loc.word] & loc.mask) != 0
     /// ```
     public struct Location: Sendable {
         /// The word index in the storage array.
         public let word: Index<Word>
 
-        /// The bit offset within the word (0..<Word.bitWidth).
+        /// The bit offset within the word.
+        ///
+        /// Lies in `0..<Word.bitWidth`.
         public let bit: Index<Bit>.Offset
 
         /// The bitmask for this bit position: `1 << bit`.
@@ -60,7 +62,7 @@ extension Bit.Packing {
         ) {
             self.word = word
             self.bit = bit
-            self.mask = Word(1) << bit.rawValue.rawValue
+            self.mask = Word(1) << bit.magnitude
         }
 
         /// Creates a location from a typed bit index.
@@ -73,14 +75,10 @@ extension Bit.Packing {
             index: Bit.Index,
             bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
         ) {
-            let i = Int(bitPattern: index.position)
-            let factor = bitsPerWord.factor
-
-            self.word = Index<Word>(__unchecked: (), Ordinal(UInt(i / factor)))
-
-            let bitOffset = i % factor
-            self.bit = Index<Bit>.Offset(Affine.Discrete.Vector(bitOffset))
-            self.mask = Word(1) << bitOffset
+            let (wordIndex, bitOffset) = bitsPerWord.quotientAndRemainder(dividing: index)
+            self.word = wordIndex
+            self.bit = bitOffset
+            self.mask = Word(1) << bitOffset.magnitude
         }
 
         /// Creates a location from a typed bit count.
@@ -96,14 +94,24 @@ extension Bit.Packing {
             count: Bit.Index.Count,
             bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
         ) {
-            let i = Int(bitPattern: count.count)
-            let factor = bitsPerWord.factor
+            self.init(
+                index: count.map(Ordinal.init),
+                bitsPerWord: bitsPerWord
+            )
+        }
 
-            self.word = Index<Word>(__unchecked: (), Ordinal(UInt(i / factor)))
-
-            let bitOffset = i % factor
-            self.bit = Index<Bit>.Offset(Affine.Discrete.Vector(bitOffset))
-            self.mask = Word(1) << bitOffset
+        /// Recomposes the global bit index from word index and bit offset.
+        ///
+        /// Inverse of `init(index:bitsPerWord:)`:
+        /// `Location(index: i, bitsPerWord: r).index(bitsPerWord: r) == i`.
+        ///
+        /// - Parameter bitsPerWord: The ratio of bits per word for the storage type.
+        /// - Returns: The global bit index recomposed from the word and bit components.
+        @inlinable
+        public func index(
+            bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
+        ) -> Bit.Index {
+            (word.map(Cardinal.init) * bitsPerWord).map(Ordinal.init) + bit.magnitude
         }
     }
 }

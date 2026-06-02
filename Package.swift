@@ -1,9 +1,9 @@
-// swift-tools-version: 6.2
+// swift-tools-version: 6.3.1
 
 import PackageDescription
 
 let package = Package(
-    name: "swift-bit-packing-primitives",
+    name: "swift-bit-pack-primitives",
     platforms: [
         .macOS(.v26),
         .iOS(.v26),
@@ -13,39 +13,39 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "Bit Packing Primitives",
-            targets: ["Bit Packing Primitives"]
+            name: "Bit Pack Primitives",
+            targets: ["Bit Pack Primitives"]
         ),
         .library(
-            name: "Bit Packing Primitives Test Support",
-            targets: ["Bit Packing Primitives Test Support"]
+            name: "Bit Pack Primitives Test Support",
+            targets: ["Bit Pack Primitives Test Support"]
         ),
     ],
     dependencies: [
-        .package(path: "../swift-bit-primitives"),
-        .package(path: "../swift-bit-index-primitives"),
+        .package(url: "https://github.com/swift-primitives/swift-bit-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-bit-index-primitives.git", branch: "main"),
     ],
     targets: [
         .target(
-            name: "Bit Packing Primitives",
+            name: "Bit Pack Primitives",
             dependencies: [
                 .product(name: "Bit Primitives", package: "swift-bit-primitives"),
                 .product(name: "Bit Index Primitives", package: "swift-bit-index-primitives"),
             ]
         ),
         .target(
-            name: "Bit Packing Primitives Test Support",
+            name: "Bit Pack Primitives Test Support",
             dependencies: [
-                "Bit Packing Primitives",
+                "Bit Pack Primitives",
                 .product(name: "Bit Index Primitives Test Support", package: "swift-bit-index-primitives"),
             ],
             path: "Tests/Support"
         ),
         .testTarget(
-            name: "Bit Packing Primitives Tests",
+            name: "Bit Pack Primitives Tests",
             dependencies: [
-                "Bit Packing Primitives",
-                "Bit Packing Primitives Test Support",
+                "Bit Pack Primitives",
+                "Bit Pack Primitives Test Support",
             ]
         ),
     ],
@@ -53,12 +53,20 @@ let package = Package(
 )
 
 for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
-    let settings: [SwiftSetting] = [
+    let ecosystem: [SwiftSetting] = [
+        .strictMemorySafety(),
         .enableUpcomingFeature("ExistentialAny"),
         .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility"),
+        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+        .enableExperimentalFeature("LifetimeDependence"),
         .enableExperimentalFeature("Lifetimes"),
-        .strictMemorySafety()
+        .enableExperimentalFeature("SuppressedAssociatedTypes"),
+        .enableUpcomingFeature("InferIsolatedConformances"),
+        .enableUpcomingFeature("LifetimeDependence"),
     ]
-    target.swiftSettings = (target.swiftSettings ?? []) + settings
+
+    let package: [SwiftSetting] = []
+
+    target.swiftSettings = (target.swiftSettings ?? []) + ecosystem + package
 }

@@ -9,14 +9,14 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Bit_Pack_Primitives
+import Bit_Pack_Primitives_Test_Support
 import Testing
-import Bit_Packing_Primitives
-import Bit_Packing_Primitives_Test_Support
 
-// MARK: - Bit.Packing.Location Tests (Parallel Namespace per [TEST-004])
+// MARK: - Bit.Pack.Location Tests (Parallel Namespace per [TEST-004])
 
-@Suite("Bit.Packing.Location")
-struct BitPackingLocationTests {
+@Suite("Bit.Pack.Location")
+struct BitPackLocationTests {
     @Suite struct Unit {}
     @Suite struct EdgeCase {}
     @Suite struct Integration {}
@@ -25,14 +25,14 @@ struct BitPackingLocationTests {
 
 // MARK: - Unit Tests
 
-extension BitPackingLocationTests.Unit {
+extension BitPackLocationTests.Unit {
     @Test
     func `init from word, bit, and mask components`() {
         let word: Index<UInt64> = 5
         let bit: Index<Bit>.Offset = 3
         let mask: UInt64 = 1 << 3
 
-        let location = Bit.Packing<UInt64>.Location(word: word, bit: bit, mask: mask)
+        let location = Bit.Pack<UInt64>.Location(word: word, bit: bit, mask: mask)
 
         #expect(location.word == 5)
         #expect(location.bit == 3)
@@ -44,7 +44,7 @@ extension BitPackingLocationTests.Unit {
         let word: Index<UInt64> = 0
         let bit: Index<Bit>.Offset = 7
 
-        let location = Bit.Packing<UInt64>.Location(word: word, bit: bit)
+        let location = Bit.Pack<UInt64>.Location(word: word, bit: bit)
 
         #expect(location.word == 0)
         #expect(location.bit == 7)
@@ -56,7 +56,7 @@ extension BitPackingLocationTests.Unit {
         let word: Index<UInt64> = 0
         let bit: Index<Bit>.Offset = 0
 
-        let location = Bit.Packing<UInt64>.Location(word: word, bit: bit)
+        let location = Bit.Pack<UInt64>.Location(word: word, bit: bit)
 
         #expect(location.mask == 1)
     }
@@ -67,7 +67,7 @@ extension BitPackingLocationTests.Unit {
             let word: Index<UInt64> = 0
             let bit: Index<Bit>.Offset = Index<Bit>.Offset(Affine.Discrete.Vector(bitPosition))
 
-            let location = Bit.Packing<UInt64>.Location(word: word, bit: bit)
+            let location = Bit.Pack<UInt64>.Location(word: word, bit: bit)
 
             #expect(location.mask == UInt64(1) << bitPosition)
         }
@@ -77,7 +77,7 @@ extension BitPackingLocationTests.Unit {
     func `init from typed bit index`() {
         // Bit index 70 with 64 bits per word should be word 1, bit 6
         let bitIndex: Bit.Index = 70
-        let location = Bit.Packing<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
+        let location = Bit.Pack<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
         #expect(location.word == 1)
         #expect(location.bit == 6)
@@ -88,7 +88,7 @@ extension BitPackingLocationTests.Unit {
     func `init from typed bit count`() {
         // Bit count 70 with 64 bits per word should be word 1, bit 6
         let count: Bit.Index.Count = 70
-        let location = Bit.Packing<UInt64>.Location(count: count, bitsPerWord: .bitWidth)
+        let location = Bit.Pack<UInt64>.Location(count: count, bitsPerWord: .bitWidth)
 
         #expect(location.word == 1)
         #expect(location.bit == 6)
@@ -98,7 +98,7 @@ extension BitPackingLocationTests.Unit {
     @Test
     func `location for bit index 0`() {
         let bitIndex: Bit.Index = 0
-        let location = Bit.Packing<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
+        let location = Bit.Pack<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
         #expect(location.word == 0)
         #expect(location.bit == 0)
@@ -108,7 +108,7 @@ extension BitPackingLocationTests.Unit {
     @Test
     func `location for bit index 63 (last bit of first word)`() {
         let bitIndex: Bit.Index = 63
-        let location = Bit.Packing<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
+        let location = Bit.Pack<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
         #expect(location.word == 0)
         #expect(location.bit == 63)
@@ -118,7 +118,7 @@ extension BitPackingLocationTests.Unit {
     @Test
     func `location for bit index 64 (first bit of second word)`() {
         let bitIndex: Bit.Index = 64
-        let location = Bit.Packing<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
+        let location = Bit.Pack<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
         #expect(location.word == 1)
         #expect(location.bit == 0)
@@ -129,7 +129,7 @@ extension BitPackingLocationTests.Unit {
     func `UInt8 word type - 8 bits per word`() {
         // Bit index 10 with 8 bits per word should be word 1, bit 2
         let bitIndex: Bit.Index = 10
-        let location = Bit.Packing<UInt8>.Location(index: bitIndex, bitsPerWord: .bitWidth)
+        let location = Bit.Pack<UInt8>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
         #expect(location.word == 1)
         #expect(location.bit == 2)
@@ -140,7 +140,7 @@ extension BitPackingLocationTests.Unit {
     func `UInt32 word type - 32 bits per word`() {
         // Bit index 35 with 32 bits per word should be word 1, bit 3
         let bitIndex: Bit.Index = 35
-        let location = Bit.Packing<UInt32>.Location(index: bitIndex, bitsPerWord: .bitWidth)
+        let location = Bit.Pack<UInt32>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
         #expect(location.word == 1)
         #expect(location.bit == 3)
@@ -150,7 +150,7 @@ extension BitPackingLocationTests.Unit {
     @Test
     func `location via Bit.Index convenience method`() {
         let bitIndex: Bit.Index = 70
-        let location: Bit.Packing<UInt64>.Location = bitIndex.location(bitsPerWord: .bitWidth)
+        let location: Bit.Pack<UInt64>.Location = bitIndex.location(bitsPerWord: .bitWidth)
 
         #expect(location.word == 1)
         #expect(location.bit == 6)
@@ -160,11 +160,11 @@ extension BitPackingLocationTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension BitPackingLocationTests.EdgeCase {
+extension BitPackLocationTests.EdgeCase {
     @Test
     func `boundary: bit position 0 in word 0`() {
         let bitIndex: Bit.Index = 0
-        let location = Bit.Packing<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
+        let location = Bit.Pack<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
         #expect(location.word == 0)
         #expect(location.bit == 0)
@@ -174,7 +174,7 @@ extension BitPackingLocationTests.EdgeCase {
     @Test
     func `boundary: maximum bit position in UInt8 word`() {
         let bitIndex: Bit.Index = 7
-        let location = Bit.Packing<UInt8>.Location(index: bitIndex, bitsPerWord: .bitWidth)
+        let location = Bit.Pack<UInt8>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
         #expect(location.word == 0)
         #expect(location.bit == 7)
@@ -187,8 +187,8 @@ extension BitPackingLocationTests.EdgeCase {
         let bit7: Bit.Index = 7
         let bit8: Bit.Index = 8
 
-        let loc7 = Bit.Packing<UInt8>.Location(index: bit7, bitsPerWord: .bitWidth)
-        let loc8 = Bit.Packing<UInt8>.Location(index: bit8, bitsPerWord: .bitWidth)
+        let loc7 = Bit.Pack<UInt8>.Location(index: bit7, bitsPerWord: .bitWidth)
+        let loc8 = Bit.Pack<UInt8>.Location(index: bit8, bitsPerWord: .bitWidth)
 
         #expect(loc7.word == 0)
         #expect(loc7.bit == 7)
@@ -200,7 +200,7 @@ extension BitPackingLocationTests.EdgeCase {
     @Test
     func `large bit index`() {
         let bitIndex: Bit.Index = 1000
-        let location = Bit.Packing<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
+        let location = Bit.Pack<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
         // 1000 / 64 = 15, 1000 % 64 = 40
         #expect(location.word == 15)
