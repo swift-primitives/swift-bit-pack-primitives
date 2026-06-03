@@ -15,17 +15,17 @@ import Testing
 
 // MARK: - Bit.Pack.Location Tests (Parallel Namespace per [TEST-004])
 
-@Suite("Bit.Pack.Location")
-struct BitPackLocationTests {
+@Suite
+struct `Bit.Pack.Location Tests` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
     @Suite struct Integration {}
     @Suite(.serialized) struct Performance {}
 }
 
 // MARK: - Unit Tests
 
-extension BitPackLocationTests.Unit {
+extension `Bit.Pack.Location Tests`.Unit {
     @Test
     func `init from word, bit, and mask components`() {
         let word: Index<UInt64> = 5
@@ -63,7 +63,7 @@ extension BitPackLocationTests.Unit {
 
     @Test
     func `mask computation for various bit positions`() {
-        for bitPosition in 0..<64 {
+        (0..<64).forEach { bitPosition in
             let word: Index<UInt64> = 0
             let bit: Index<Bit>.Offset = Index<Bit>.Offset(Affine.Discrete.Vector(bitPosition))
 
@@ -160,7 +160,7 @@ extension BitPackLocationTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension BitPackLocationTests.EdgeCase {
+extension `Bit.Pack.Location Tests`.`Edge Case` {
     @Test
     func `boundary: bit position 0 in word 0`() {
         let bitIndex: Bit.Index = 0

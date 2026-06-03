@@ -15,17 +15,17 @@ import Testing
 
 // MARK: - Bit.Pack Tests (Parallel Namespace per [TEST-004])
 
-@Suite("Bit.Pack")
-struct BitPackTests {
+@Suite
+struct `Bit.Pack Tests` {
     @Suite struct Unit {}
-    @Suite struct EdgeCase {}
+    @Suite struct `Edge Case` {}
     @Suite struct Integration {}
     @Suite(.serialized) struct Performance {}
 }
 
 // MARK: - Unit Tests
 
-extension BitPackTests.Unit {
+extension `Bit.Pack Tests`.Unit {
     @Test
     func `pack for 0 bits`() {
         let pack = Bit.Pack<UInt64>(count: 0, bitsPerWord: .bitWidth)
@@ -79,7 +79,7 @@ extension BitPackTests.Unit {
 
 // MARK: - Edge Case Tests
 
-extension BitPackTests.EdgeCase {
+extension `Bit.Pack Tests`.`Edge Case` {
     @Test
     func `pack for 1 bit`() {
         let pack = Bit.Pack<UInt64>(count: 1, bitsPerWord: .bitWidth)
