@@ -1,6 +1,6 @@
 # .github/metadata.yaml
 # Triaged by AI-assisted bulk pass (2026-04-29).
-description: "Bit pack types for Swift."
+description: "Bit-packing layout witness computing word count and trailing slack for N bits, without owning storage, in Swift."
 topics:
   - primitives
   - bit
