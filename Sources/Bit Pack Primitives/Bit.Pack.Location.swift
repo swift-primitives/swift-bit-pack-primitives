@@ -75,7 +75,13 @@ extension Bit.Pack {
             index: Bit.Index,
             bitsPerWord: Affine.Discrete.Ratio<Word, Bit>
         ) {
-            let (wordIndex, bitOffset) = bitsPerWord.quotientAndRemainder(dividing: index)
+            // WHY: `bitsPerWord` is a bits-per-word ratio whose factor is the carrier
+            // word's bit width — structurally positive — and an index above `Int.max`
+            // trapped before the typed-throws migration too; `try!` preserves the
+            // pre-migration trap contract without cascading `throws` into this init.
+            // swift-format-ignore: NeverUseForceTry
+            // swiftlint:disable:next force_try
+            let (wordIndex, bitOffset) = try! bitsPerWord.quotientAndRemainder(dividing: index)
             self.word = wordIndex
             self.bit = bitOffset
             self.mask = Word(1) << bitOffset.magnitude
