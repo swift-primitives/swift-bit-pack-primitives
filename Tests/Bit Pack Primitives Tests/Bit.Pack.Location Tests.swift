@@ -1,19 +1,6 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Bit_Pack_Primitives
 import Bit_Pack_Primitives_Test_Support
 import Testing
-
-// MARK: - Bit.Pack.Location Tests (Parallel Namespace per [TEST-004])
 
 @Suite
 struct `Bit.Pack.Location Tests` {
@@ -22,8 +9,6 @@ struct `Bit.Pack.Location Tests` {
     @Suite struct Integration {}
     @Suite(.serialized) struct Performance {}
 }
-
-// MARK: - Unit Tests
 
 extension `Bit.Pack.Location Tests`.Unit {
     @Test
@@ -75,7 +60,7 @@ extension `Bit.Pack.Location Tests`.Unit {
 
     @Test
     func `init from typed bit index`() {
-        // Bit index 70 with 64 bits per word should be word 1, bit 6
+
         let bitIndex: Bit.Index = 70
         let location = Bit.Pack<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
@@ -86,7 +71,7 @@ extension `Bit.Pack.Location Tests`.Unit {
 
     @Test
     func `init from typed bit count`() {
-        // Bit count 70 with 64 bits per word should be word 1, bit 6
+
         let count: Bit.Index.Count = 70
         let location = Bit.Pack<UInt64>.Location(count: count, bitsPerWord: .bitWidth)
 
@@ -127,7 +112,7 @@ extension `Bit.Pack.Location Tests`.Unit {
 
     @Test
     func `UInt8 word type - 8 bits per word`() {
-        // Bit index 10 with 8 bits per word should be word 1, bit 2
+
         let bitIndex: Bit.Index = 10
         let location = Bit.Pack<UInt8>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
@@ -138,7 +123,7 @@ extension `Bit.Pack.Location Tests`.Unit {
 
     @Test
     func `UInt32 word type - 32 bits per word`() {
-        // Bit index 35 with 32 bits per word should be word 1, bit 3
+
         let bitIndex: Bit.Index = 35
         let location = Bit.Pack<UInt32>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
@@ -157,8 +142,6 @@ extension `Bit.Pack.Location Tests`.Unit {
         #expect(location.mask == UInt64(1) << 6)
     }
 }
-
-// MARK: - Edge Case Tests
 
 extension `Bit.Pack.Location Tests`.`Edge Case` {
     @Test
@@ -183,7 +166,7 @@ extension `Bit.Pack.Location Tests`.`Edge Case` {
 
     @Test
     func `boundary: word transition at UInt8 boundary`() {
-        // Bit 7 should be in word 0, bit 8 should be in word 1
+
         let bit7: Bit.Index = 7
         let bit8: Bit.Index = 8
 
@@ -202,7 +185,6 @@ extension `Bit.Pack.Location Tests`.`Edge Case` {
         let bitIndex: Bit.Index = 1000
         let location = Bit.Pack<UInt64>.Location(index: bitIndex, bitsPerWord: .bitWidth)
 
-        // 1000 / 64 = 15, 1000 % 64 = 40
         #expect(location.word == 15)
         #expect(location.bit == 40)
         #expect(location.mask == UInt64(1) << 40)
